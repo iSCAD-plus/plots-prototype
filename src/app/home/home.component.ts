@@ -19,8 +19,8 @@ const decisionByYear = gql`
 `;
 
 interface QueryResponse {
-  decisions
-  loading
+  decisions;
+  loading;
 }
 
 @Component({
