@@ -70,6 +70,10 @@
   version "4.1.0-rc.0"
   resolved "https://registry.yarnpkg.com/@angular/common/-/common-4.1.0-rc.0.tgz#592d6d2365fac163c302c5f91d549efb989da5d2"
 
+"@angular/common@^2.0.0-rc.4":
+  version "2.4.10"
+  resolved "https://registry.yarnpkg.com/@angular/common/-/common-2.4.10.tgz#a3a682d2228fa30ec23dd0eb57c8e887fba26997"
+
 "@angular/compiler-cli@4.1.0-rc.0":
   version "4.1.0-rc.0"
   resolved "https://registry.yarnpkg.com/@angular/compiler-cli/-/compiler-cli-4.1.0-rc.0.tgz#9b62edce15d8c63d4929908c9d5ab0de5696546b"
@@ -82,9 +86,17 @@
   version "4.1.0-rc.0"
   resolved "https://registry.yarnpkg.com/@angular/compiler/-/compiler-4.1.0-rc.0.tgz#6e044f02433e76051a456da9b4f11ff0dfbd514d"
 
+"@angular/compiler@^2.0.0-rc.4":
+  version "2.4.10"
+  resolved "https://registry.yarnpkg.com/@angular/compiler/-/compiler-2.4.10.tgz#f51fd34820b2a02c7cb61fbcf49873c58056fb0c"
+
 "@angular/core@4.1.0-rc.0":
   version "4.1.0-rc.0"
   resolved "https://registry.yarnpkg.com/@angular/core/-/core-4.1.0-rc.0.tgz#537a7aa9aebd7a56415909576e3930cefbece886"
+
+"@angular/core@^2.0.0-rc.4":
+  version "2.4.10"
+  resolved "https://registry.yarnpkg.com/@angular/core/-/core-2.4.10.tgz#0b8320a65065965d998645b1f5cd3cf769b441ea"
 
 "@angular/forms@4.1.0-rc.0":
   version "4.1.0-rc.0"
@@ -98,9 +110,17 @@
   version "4.1.0-rc.0"
   resolved "https://registry.yarnpkg.com/@angular/platform-browser-dynamic/-/platform-browser-dynamic-4.1.0-rc.0.tgz#36c0d3e874f135964f183540f017fb791a72ab0d"
 
+"@angular/platform-browser-dynamic@^2.0.0-rc.4":
+  version "2.4.10"
+  resolved "https://registry.yarnpkg.com/@angular/platform-browser-dynamic/-/platform-browser-dynamic-2.4.10.tgz#8df25dec2b06adc690cc9bc26448deccaebcd8ec"
+
 "@angular/platform-browser@4.1.0-rc.0":
   version "4.1.0-rc.0"
   resolved "https://registry.yarnpkg.com/@angular/platform-browser/-/platform-browser-4.1.0-rc.0.tgz#9a8a92ff6e60396fb768bc3db2c6703cc0d3bf1a"
+
+"@angular/platform-browser@^2.0.0-rc.4":
+  version "2.4.10"
+  resolved "https://registry.yarnpkg.com/@angular/platform-browser/-/platform-browser-2.4.10.tgz#cbf25608148fb4ffef96cc5005ba5d7b3e093906"
 
 "@angular/platform-server@4.1.0-rc.0":
   version "4.1.0-rc.0"
@@ -1640,6 +1660,10 @@ d3-zoom@1.1.4:
     d3-interpolate "1"
     d3-selection "1"
     d3-transition "1"
+
+d3@^3.5.15:
+  version "3.5.17"
+  resolved "https://registry.yarnpkg.com/d3/-/d3-3.5.17.tgz#bc46748004378b21a360c9fc7cf5231790762fb8"
 
 d3@^4.4.0:
   version "4.8.0"
@@ -3789,6 +3813,18 @@ negotiator@0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.1.tgz#2b327184e8992101177b28563fb5e7102acd0ca9"
 
+ng2-nvd3@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/ng2-nvd3/-/ng2-nvd3-1.1.3.tgz#5ab029b4cc55d108a3a3415d4b41065105557efa"
+  dependencies:
+    "@angular/common" "^2.0.0-rc.4"
+    "@angular/compiler" "^2.0.0-rc.4"
+    "@angular/core" "^2.0.0-rc.4"
+    "@angular/platform-browser" "^2.0.0-rc.4"
+    "@angular/platform-browser-dynamic" "^2.0.0-rc.4"
+    d3 "^3.5.15"
+    nvd3 "^1.8.2"
+
 no-case@^2.2.0:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/no-case/-/no-case-2.3.1.tgz#7aeba1c73a52184265554b7dc03baf720df80081"
@@ -3961,6 +3997,10 @@ num2fraction@^1.2.2:
 number-is-nan@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/number-is-nan/-/number-is-nan-1.0.1.tgz#097b602b53422a522c1afb8790318336941a011d"
+
+nvd3@^1.8.2, nvd3@^1.8.5:
+  version "1.8.5"
+  resolved "https://registry.yarnpkg.com/nvd3/-/nvd3-1.8.5.tgz#94a0c98ff1c3366b721fa7a8705b3c6e9eaf6bb6"
 
 oauth-sign@~0.8.1:
   version "0.8.2"
@@ -4982,6 +5022,37 @@ rxjs@^5.0.1:
 safe-buffer@^5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.0.1.tgz#d263ca54696cd8a306b5ca6551e92de57918fbe7"
+
+sanctuary-def@0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/sanctuary-def/-/sanctuary-def-0.9.0.tgz#a54bc330ec955d0ef47752317a01657db6d4760e"
+  dependencies:
+    sanctuary-type-classes "2.0.x"
+    sanctuary-type-identifiers "1.0.x"
+
+sanctuary-type-classes@2.0.x:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/sanctuary-type-classes/-/sanctuary-type-classes-2.0.1.tgz#06b6cfd78e3e8d85cd93f5c2d7b08796b68d1e74"
+  dependencies:
+    sanctuary-type-identifiers "1.0.x"
+
+sanctuary-type-classes@3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/sanctuary-type-classes/-/sanctuary-type-classes-3.0.1.tgz#65163f8e1dfdfdc05cf842b83b608fff921cda15"
+  dependencies:
+    sanctuary-type-identifiers "1.0.x"
+
+sanctuary-type-identifiers@1.0.0, sanctuary-type-identifiers@1.0.x:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/sanctuary-type-identifiers/-/sanctuary-type-identifiers-1.0.0.tgz#e8f359f006cb5e624cfb8464603fc114608bde9f"
+
+sanctuary@^0.12.2:
+  version "0.12.2"
+  resolved "https://registry.yarnpkg.com/sanctuary/-/sanctuary-0.12.2.tgz#70ae648aff04787b403402093caa963b873a4ea5"
+  dependencies:
+    sanctuary-def "0.9.0"
+    sanctuary-type-classes "3.0.1"
+    sanctuary-type-identifiers "1.0.0"
 
 sass-graph@^2.1.1:
   version "2.1.2"

@@ -1,51 +1,55 @@
-import * as R from 'ramda';
 import gql from 'graphql-tag';
 import { Component, OnInit } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 
-import mockData from './mockData';
-
-function format(xs: object[]): any[] {
-  return R.map(R.props(['year', 'count']), xs);
-};
-
-const decisionByYear = gql`
-  query DecisionByYear {
-    decisionQuery {
-      year
-      count
+const getPlots = gql`
+  query GetPlots {
+    getPlots {
+      name
+      query
+      axis {
+        x,
+        y,
+        seriesKey
+      }
     }
   }
 `;
 
 interface QueryResponse {
-  decisions;
-  loading;
+  getPlots: object[];
+  loading: boolean;
 }
 
 @Component({
   selector: 'app-home',
   styleUrls: ['./home.component.css'],
   template: `
-    <h3>Decision By Year</h3>
-    <app-barchart *ngIf="chartData" [data]="chartData"></app-barchart>
+    <h3>Plots</h3>
+    <ul>
+      <div *ngFor="let plot of plots">
+        <plot
+          [title]="plot.name"
+          [query]="plot.query"
+          [axisInfo]="plot.axis">
+        </plot>
+      </div>
+    </ul>
   `,
 })
 export class HomeComponent implements OnInit {
   loading: boolean;
-  private chartData: Array<any>;
+  private plots: object[];
 
   constructor(private apollo: Apollo) {
-    this.chartData = format(mockData);
+    this.plots = [];
   }
 
   ngOnInit() {
-    // this.apollo.watchQuery<QueryResponse>({ query: decisionByYear })
-    //   .subscribe(({ data }) => {
-    //     console.log(data);
-    //     this.chartData = [];
-    //     this.loading = data.loading;
-    //     this.chartData = format(data.decisionQuery);
-    //   });
+    this.apollo.watchQuery<QueryResponse>({ query: getPlots })
+      .subscribe(({ data }) => {
+        this.loading = data.loading;
+        this.plots = data.getPlots;
+      });
   }
 }
