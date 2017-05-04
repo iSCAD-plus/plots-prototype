@@ -25,7 +25,7 @@ interface Axis {
 export class PlotComponent implements OnInit {
   options: object;
   loading: boolean;
-  private chartData: Array<any>;
+  private chartData: object;
 
   @Input() title: String;
   @Input() query: String;
@@ -55,7 +55,14 @@ export class PlotComponent implements OnInit {
         showValues: true,
         duration: 500,
         xAxis: { axisLabel: x },
-        yAxis: { axisLabel: y, axisLabelDistance: -10 }
+        yAxis: { axisLabel: y, axisLabelDistance: -10 },
+        dispatch: {
+          stateChange: e => console.log("stateChange"),
+          changeState: e => console.log("changeState"),
+          tooltipShow: e => console.log("tooltipShow"),
+          tooltipHide: e => console.log("tooltipHide")
+        },
+        // callback: chart => console.log("!!! lineChart callback !!!"),
       }
     }
 
@@ -64,7 +71,12 @@ export class PlotComponent implements OnInit {
         this.loading = data.loading;
         // this.chartData = R.map(R.props([this.x, this.y]), data.decisionQuery);
         // this.chartData = R.map(R.props([x, y]), data.decisionQuery);
-        this.chartData = data.decisionQuery;
+        this.chartData = [{
+          key: this.title,
+          values: data.decisionQuery,
+        }];
+
+        console.log(this.chartData);
       });
   }
 }
