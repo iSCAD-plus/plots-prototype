@@ -14,11 +14,15 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { PlotComponent } from './shared';
 import { routing, appRoutingProviders } from './app.routes';
+import { apiUrl } from '../../settings.development.js';
+
+const settings = process.env.NODE_ENV === 'production'
+  ? require('../../settings.production.js')
+  : require('../../settings.development.js');
 
 const client = new ApolloClient({
   networkInterface: createNetworkInterface({
-    // uri: 'http://iscad.unmeetings.org/api/graphql'
-    uri: 'http://localhost:3000/api/graphql'
+    uri: settings.apiUrl,
   }),
 });
 
