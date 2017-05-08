@@ -30,9 +30,6 @@ export class PlotComponent implements OnInit {
   @Input() title: String;
   @Input() query: String;
   @Input() axisInfo: Axis;
-  // @Input() x: String;
-  // @Input() y: String;
-  // @Input() seriesKey: String;
 
   constructor(private apollo: Apollo) {
     this.chartData = [];
@@ -50,12 +47,19 @@ export class PlotComponent implements OnInit {
         type: 'discreteBarChart',
         height: 450,
         margin : { top: 20, right: 20, bottom: 50, left: 55 },
-        x: R.prop(x),
-        y: R.prop(y),
+        x: R.prop('value'),
+        y: R.prop('label'),
         showValues: true,
+        valueFormat: Math.floor,
         duration: 500,
-        xAxis: { axisLabel: x },
-        yAxis: { axisLabel: y, axisLabelDistance: -10 },
+        xAxis: {
+          axisLabel: x,
+        },
+        yAxis: {
+          axisLabel: y,
+          axisLabelDistance: -10,
+          tickFormat: Math.floor,
+        },
         dispatch: {
           stateChange: e => console.log("stateChange"),
           changeState: e => console.log("changeState"),
@@ -71,12 +75,25 @@ export class PlotComponent implements OnInit {
         this.loading = data.loading;
         // this.chartData = R.map(R.props([this.x, this.y]), data.decisionQuery);
         // this.chartData = R.map(R.props([x, y]), data.decisionQuery);
+
+        const values = R.map(S.pipe([
+          R.props([x, y]),
+          R.zipObj(['value', 'label']),
+          R.tap(console.log),
+        ]), data.decisionQuery);
+
+        if (data.decisionQuery[0]['seriesKey']) console.log(data.decisionQuery[0]['seriesKey']);
+        // console.log(data.decisionQuery);
+        // console.log(x, y);
+        // console.log(values);
+        // console.log('');
+
         this.chartData = [{
-          key: this.title,
-          values: data.decisionQuery,
+          key: data.decisionQuery[0]['seriesKey'] || this.title,
+          values,
         }];
 
-        console.log(this.chartData);
+        // console.log(this.chartData);
       });
   }
 }
