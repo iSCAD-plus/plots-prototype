@@ -17,6 +17,7 @@ export const options = ({x,y}) => {
     xAxis: {
     axisLabel: x,
     rotateLabels: 22.5,
+    staggerLabels: true,
     },
     yAxis: {
     axisLabel: y,

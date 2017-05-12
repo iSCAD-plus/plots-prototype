@@ -20,7 +20,7 @@ interface Axis {
 @Component({
   selector: 'plot',
   template: `
-  <h3>{{title}}</h3>
+  <h3>{{title}}</h3>{{query}}
   <form>
       <input type="radio" name="chartType" [(ngModel)]="plotType" (click)="setPlotType('pieChart')" value="pieChart">Pie Chart |
       <input type="radio" name="chartType"  [(ngModel)]="plotType" (click)="setPlotType('discreteBarChart')" value="discreteBarChart"> Bar Chart
@@ -66,6 +66,15 @@ export class PlotComponent implements OnInit {
         // this.chartData = R.map(R.props([this.x, this.y]), data.decisionQuery);
         // this.chartData = R.map(R.props([x, y]), data.decisionQuery);
 
+        if (this.title === "Security Council sanctions-related decisions by type") {
+          console.log(this.gqlQuery);
+          console.log(this.title);
+          for (let x in data.decisionQuery) {
+          console.log('' + x + ': ' + JSON.stringify(data.decisionQuery[x]));
+          }
+          console.log(data);
+        }
+
         const values = R.map(S.pipe([
           R.props([x, y]),
           R.zipObj(['value', 'label']),
@@ -97,5 +106,9 @@ export class PlotComponent implements OnInit {
       this.shaper = R.prop(this.plotType)(this.shapers);
       this.options = this.shaper.options({x,y});
       this.chartData = this.shaper.shape(this.preppedData);
+
+      console.log(this.title);
+      console.log(this.preppedData);
+      console.log(this.chartData);
       }
 }
