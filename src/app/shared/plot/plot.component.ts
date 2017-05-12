@@ -50,15 +50,15 @@ export class PlotComponent implements OnInit {
   }
 
   ngOnInit() {
-  const { x, y } = this.axisInfo;
-  const plotType = this.plotType || 'discreteBarChart';
-  this.shapers = {
-    pieChart,
-    discreteBarChart,
+    const { x, y } = this.axisInfo;
+    const plotType = this.plotType || 'discreteBarChart';
+    this.shapers = {
+      pieChart,
+      discreteBarChart,
     };
     this.shaper = R.prop(plotType)(this.shapers);
 
-  this.options = this.shaper.options({x,y});
+    this.options = this.shaper.options({ x, y });
 
     this.apollo.watchQuery<QueryResponse>({ query: this.gqlQuery })
       .subscribe(({ data }) => {
@@ -70,7 +70,7 @@ export class PlotComponent implements OnInit {
           console.log(this.gqlQuery);
           console.log(this.title);
           for (let x in data.decisionQuery) {
-          console.log('' + x + ': ' + JSON.stringify(data.decisionQuery[x]));
+            console.log('' + x + ': ' + JSON.stringify(data.decisionQuery[x]));
           }
           console.log(data);
         }
@@ -79,9 +79,9 @@ export class PlotComponent implements OnInit {
           R.props([x, y]),
           R.zipObj(['value', 'label']),
           //R.tap(console.log),
-          ]), data.decisionQuery);
+        ]), data.decisionQuery);
 
-          //if (data.decisionQuery[0]['seriesKey']) console.log(data.decisionQuery[0]['seriesKey']);
+        //if (data.decisionQuery[0]['seriesKey']) console.log(data.decisionQuery[0]['seriesKey']);
         // console.log(data.decisionQuery);
         // console.log(x, y);
         // console.log(values);
@@ -90,25 +90,25 @@ export class PlotComponent implements OnInit {
         this.preppedData = {
           key: data.decisionQuery[0]['seriesKey'] || this.title,
           values,
-          };
+        };
 
-          this.chartData = this.shaper.shape(this.preppedData);
+        this.chartData = this.shaper.shape(this.preppedData);
 
-          //console.log('chart data');
-          //console.log(this.chartData);
+        //console.log('chart data');
+        //console.log(this.chartData);
       });
-      }
+  }
 
-      public setPlotType(plotType: string) {
-      const { x, y } = this.axisInfo;
-      if (!this.shapers) { return; }
-      this.plotType = plotType;
-      this.shaper = R.prop(this.plotType)(this.shapers);
-      this.options = this.shaper.options({x,y});
-      this.chartData = this.shaper.shape(this.preppedData);
+  public setPlotType(plotType: string) {
+    const { x, y } = this.axisInfo;
+    if (!this.shapers) { return; }
+    this.plotType = plotType;
+    this.shaper = R.prop(this.plotType)(this.shapers);
+    this.options = this.shaper.options({ x, y });
+    this.chartData = this.shaper.shape(this.preppedData);
 
-      console.log(this.title);
-      console.log(this.preppedData);
-      console.log(this.chartData);
-      }
+    console.log(this.title);
+    console.log(this.preppedData);
+    console.log(this.chartData);
+  }
 }

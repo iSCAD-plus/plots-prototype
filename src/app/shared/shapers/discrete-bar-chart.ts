@@ -1,10 +1,10 @@
 import * as R from 'ramda';
 
-export const shape = ({key, values}) => {
-return [{key, values}];
+export const shape = ({ key, values }) => {
+  return [{ key, values }];
 };
 
-export const options = ({x,y}) => {
+export const options = ({ x, y }) => {
   const chart = {
     type: 'discreteBarChart',
     height: 450,
@@ -15,14 +15,14 @@ export const options = ({x,y}) => {
     valueFormat: Math.floor,
     duration: 500,
     xAxis: {
-    axisLabel: x,
-    rotateLabels: 22.5,
-    staggerLabels: true,
+      axisLabel: x,
+      rotateLabels: 22.5,
+      staggerLabels: true,
     },
     yAxis: {
-    axisLabel: y,
-    axisLabelDistance: -10,
-    tickFormat: Math.floor,
+      axisLabel: y,
+      axisLabelDistance: -10,
+      tickFormat: Math.floor,
     },
   };
 

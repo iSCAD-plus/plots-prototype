@@ -1,6 +1,6 @@
 import * as R from 'ramda';
 
-export const shape = ({key, values}) => (values);
+export const shape = ({ key, values }) => (values);
 
 export const options = () => {
   const chart = {
