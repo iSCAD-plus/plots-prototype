@@ -6,7 +6,7 @@
   "scripts": {
     "ng": "./node_modules/.bin/ng",
     "build": "yarn ng -- build --environment=${ENV:-dev}",
-    "start": "yarn ng -- serve --host=0.0.0.0 --environment=${ENV:-dev}",
+    "start": "yarn ng -- serve --environment=${ENV:-dev}",
     "lint": "./node_modules/.bin/tslint \"src/**/*.ts\"",
     "test": "yarn ng -- test",
     "pree2e": "./node_modules/.bin/webdriver-manager update --standalone false --gecko false",
