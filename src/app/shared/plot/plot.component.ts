@@ -46,7 +46,7 @@ export class PlotComponent implements OnInit {
       chart: {
         type: 'discreteBarChart',
         height: 450,
-        margin : { top: 20, right: 20, bottom: 50, left: 55 },
+        margin: { top: 20, right: 20, bottom: 50, left: 55 },
         x: R.prop('value'),
         y: R.prop('label'),
         showValues: true,
