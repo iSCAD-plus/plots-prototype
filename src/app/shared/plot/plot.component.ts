@@ -6,6 +6,11 @@ import { Apollo } from 'apollo-angular';
 import * as pieChart from '../shapers/pie-chart';
 import * as discreteBarChart from '../shapers/discrete-bar-chart';
 
+const presentData = S.pipe([
+  R.map(R.omit(['__typename'])),
+  x => JSON.stringify(x, null, 2),
+]);
+
 interface QueryResponse {
   decisionQuery: object[]
   loading: boolean
@@ -20,33 +25,55 @@ interface Axis {
 @Component({
   selector: 'plot',
   template: `
-  <h3>{{title}}</h3>{{query}}
+  <h3>{{title}}</h3>
   <form>
-      <input type="radio" name="chartType" [(ngModel)]="plotType" (click)="setPlotType('pieChart')" value="pieChart">Pie Chart |
-      <input type="radio" name="chartType"  [(ngModel)]="plotType" (click)="setPlotType('discreteBarChart')" value="discreteBarChart"> Bar Chart
+      <input
+        type="radio"
+        name="chartType"
+        [(ngModel)]="plotType"
+        (click)="setPlotType('pieChart')"
+        value="pieChart"
+      >Pie Chart |
+      <input
+        type="radio"
+        name="chartType"
+        [(ngModel)]="plotType"
+        (click)="setPlotType('discreteBarChart')"
+        value="discreteBarChart"
+      > Bar Chart
     </form>
-    <nvd3 *ngIf="chartData" [options]="options" [data]="chartData"></nvd3>
+    <nvd3
+      (click)="toggleRawDataVisibility()"
+      *ngIf="chartData"
+      [options]="options"
+      [data]="chartData">
+    </nvd3>
+    <pre [hidden]="!showRaw">{{rawData}}<pre>
   `,
 })
 export class PlotComponent implements OnInit {
   options: object;
   loading: boolean;
-  private chartData: object;
+  private rawData: string;
   private preppedData: object;
   private shapers: any;
   private shaper: any;
+  private chartData: object = [];
+  private showRaw: boolean = false;
 
   @Input() title: String;
   @Input() query: String;
   @Input() axisInfo: Axis;
   @Input() plotType: string;
 
-  constructor(private apollo: Apollo) {
-    this.chartData = [];
-  }
+  constructor(private apollo: Apollo) {}
 
   get gqlQuery() {
     return gql`${this.query}`;
+  }
+
+  toggleRawDataVisibility() {
+    this.showRaw = !this.showRaw;
   }
 
   ngOnInit() {
@@ -63,9 +90,6 @@ export class PlotComponent implements OnInit {
     this.apollo.watchQuery<QueryResponse>({ query: this.gqlQuery })
       .subscribe(({ data }) => {
         this.loading = data.loading;
-        // this.chartData = R.map(R.props([this.x, this.y]), data.decisionQuery);
-        // this.chartData = R.map(R.props([x, y]), data.decisionQuery);
-
         if (this.title === "Security Council sanctions-related decisions by type") {
           console.log(this.gqlQuery);
           console.log(this.title);
@@ -78,7 +102,6 @@ export class PlotComponent implements OnInit {
         const values = R.map(S.pipe([
           R.props([x, y]),
           R.zipObj(['value', 'label']),
-          //R.tap(console.log),
         ]), data.decisionQuery);
 
         //if (data.decisionQuery[0]['seriesKey']) console.log(data.decisionQuery[0]['seriesKey']);
@@ -92,10 +115,8 @@ export class PlotComponent implements OnInit {
           values,
         };
 
+        this.rawData = presentData(data.decisionQuery);
         this.chartData = this.shaper.shape(this.preppedData);
-
-        //console.log('chart data');
-        //console.log(this.chartData);
       });
   }
 

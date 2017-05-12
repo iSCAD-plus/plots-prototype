@@ -9,7 +9,7 @@ export const options = () => {
     margin: { top: 20, right: 20, bottom: 150, left: 55 },
     x: R.prop('value'),
     y: R.prop('label'),
-    showLabels: true,
+    showLabels: false,
     duration: 500,
     labelThreshold: 0.01,
     labelSunbeamLayout: true,
