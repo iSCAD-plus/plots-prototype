@@ -27,6 +27,7 @@ interface Axis {
   template: `
   <h3>{{title}}</h3>
   <form>
+      {{query}}
       <input
         type="radio"
         name="chartType"
@@ -66,7 +67,7 @@ export class PlotComponent implements OnInit {
   @Input() axisInfo: Axis;
   @Input() plotType: string;
 
-  constructor(private apollo: Apollo) {}
+  constructor(private apollo: Apollo) { }
 
   get gqlQuery() {
     return gql`${this.query}`;
@@ -87,37 +88,25 @@ export class PlotComponent implements OnInit {
 
     this.options = this.shaper.options({ x, y });
 
-    this.apollo.watchQuery<QueryResponse>({ query: this.gqlQuery })
-      .subscribe(({ data }) => {
-        this.loading = data.loading;
-        if (this.title === "Security Council sanctions-related decisions by type") {
-          console.log(this.gqlQuery);
-          console.log(this.title);
-          for (let x in data.decisionQuery) {
-            console.log('' + x + ': ' + JSON.stringify(data.decisionQuery[x]));
-          }
-          console.log(data);
-        }
+    const subscriber = ({ data }) => {
+      this.loading = data.loading;
 
-        const values = R.map(S.pipe([
-          R.props([x, y]),
-          R.zipObj(['value', 'label']),
-        ]), data.decisionQuery);
+      const values = R.map(S.pipe([
+        R.props([x, y]),
+        R.zipObj(['value', 'label']),
+      ]), data.decisionQuery);
 
-        //if (data.decisionQuery[0]['seriesKey']) console.log(data.decisionQuery[0]['seriesKey']);
-        // console.log(data.decisionQuery);
-        // console.log(x, y);
-        // console.log(values);
-        // console.log('');
+      this.preppedData = {
+        key: data.decisionQuery[0]['seriesKey'] || this.title,
+        values,
+      };
 
-        this.preppedData = {
-          key: data.decisionQuery[0]['seriesKey'] || this.title,
-          values,
-        };
+      this.rawData = presentData(data.decisionQuery);
+      this.chartData = this.shaper.shape(this.preppedData);
+    };
 
-        this.rawData = presentData(data.decisionQuery);
-        this.chartData = this.shaper.shape(this.preppedData);
-      });
+    this.apollo.query<QueryResponse>({ query: this.gqlQuery })
+      .subscribe(subscriber);
   }
 
   public setPlotType(plotType: string) {
@@ -128,8 +117,8 @@ export class PlotComponent implements OnInit {
     this.options = this.shaper.options({ x, y });
     this.chartData = this.shaper.shape(this.preppedData);
 
-    console.log(this.title);
-    console.log(this.preppedData);
-    console.log(this.chartData);
+    //console.log(this.title);
+    //console.log(this.preppedData);
+    //console.log(this.chartData);
   }
 }
