@@ -25,7 +25,7 @@ interface QueryResponse {
   selector: 'app-home',
   styleUrls: ['./home.component.css'],
   template: `
-    <h3>Plots</h3>
+    <h3>iSCAD+ Prototype</h3>
     <ul>
       <div *ngFor="let plot of plots">
         <plot
