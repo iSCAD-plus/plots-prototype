@@ -50,6 +50,7 @@ export class HomeComponent implements OnInit {
       .subscribe(({ data }) => {
         this.loading = data.loading;
         this.plots = data.getPlots;
+        console.log(this.plots);
       });
   }
 }
