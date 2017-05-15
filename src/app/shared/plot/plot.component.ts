@@ -3,6 +3,15 @@ import * as R from 'ramda';
 import gql from 'graphql-tag';
 import { Component, OnInit, Input } from '@angular/core';
 import { Apollo } from 'apollo-angular';
+import * as pieChart from '../shapers/pie-chart';
+import * as discreteBarChart from '../shapers/discrete-bar-chart';
+
+const chartDataPoint = (x, y) => p => ({ value: p[x], label: p[y] });
+
+const presentData = S.pipe([
+  R.map(R.omit(['__typename'])),
+  x => JSON.stringify(x, null, 2),
+]);
 
 interface QueryResponse {
   decisionQuery: object[]
@@ -18,83 +27,86 @@ interface Axis {
 @Component({
   selector: 'plot',
   template: `
-    <h3>{{title}}</h3>
-    <nvd3 *ngIf="chartData" [options]="options" [data]="chartData"></nvd3>
+  <h3>{{title}}</h3>
+  <form>
+      <input
+        type="radio"
+        name="chartType"
+        [(ngModel)]="plotType"
+        (click)="setPlotType('pieChart')"
+        value="pieChart"
+      >Pie Chart |
+      <input
+        type="radio"
+        name="chartType"
+        [(ngModel)]="plotType"
+        (click)="setPlotType('discreteBarChart')"
+        value="discreteBarChart"
+      > Bar Chart
+    </form>
+    <nvd3
+      (click)="toggleRawDataVisibility()"
+      *ngIf="chartData"
+      [options]="options"
+      [data]="chartData">
+    </nvd3>
+    <pre [hidden]="!showRaw">{{rawData}}<pre>
   `,
 })
 export class PlotComponent implements OnInit {
   options: object;
   loading: boolean;
-  private chartData: object;
+  private rawData: string;
+  private preppedData: object;
+  private shapers: any;
+  private shaper: any;
+  private chartData: object = [];
+  private showRaw: boolean = false;
 
   @Input() title: String;
   @Input() query: String;
   @Input() axisInfo: Axis;
+  @Input() plotType: string;
 
-  constructor(private apollo: Apollo) {
-    this.chartData = [];
-  }
+  constructor(private apollo: Apollo) { }
 
   get gqlQuery() {
     return gql`${this.query}`;
   }
 
+  toggleRawDataVisibility() {
+    this.showRaw = !this.showRaw;
+  }
+
   ngOnInit() {
     const { x, y } = this.axisInfo;
+    const plotType = this.plotType || 'discreteBarChart';
+    this.shapers = { pieChart, discreteBarChart };
+    this.shaper = R.prop(plotType)(this.shapers);
+    this.options = this.shaper.options({ x, y });
 
-    this.options = {
-      chart: {
-        type: 'discreteBarChart',
-        height: 450,
-        margin : { top: 20, right: 20, bottom: 150, left: 55 },
-        x: R.prop('value'),
-        y: R.prop('label'),
-        showValues: true,
-        valueFormat: Math.floor,
-        duration: 500,
-        xAxis: {
-        axisLabel: x,
-        rotateLabels: 22.5,
-        },
-        yAxis: {
-          axisLabel: y,
-          axisLabelDistance: -10,
-          tickFormat: Math.floor,
-        },
-        dispatch: {
-          stateChange: e => console.log("stateChange"),
-          changeState: e => console.log("changeState"),
-          tooltipShow: e => console.log("tooltipShow"),
-          tooltipHide: e => console.log("tooltipHide")
-        },
-        // callback: chart => console.log("!!! lineChart callback !!!"),
-      }
-    }
-
-    this.apollo.watchQuery<QueryResponse>({ query: this.gqlQuery })
+    this.apollo.query<QueryResponse>({ query: this.gqlQuery })
       .subscribe(({ data }) => {
         this.loading = data.loading;
-        // this.chartData = R.map(R.props([this.x, this.y]), data.decisionQuery);
-        // this.chartData = R.map(R.props([x, y]), data.decisionQuery);
 
-        const values = R.map(S.pipe([
-          R.props([x, y]),
-          R.zipObj(['value', 'label']),
-          R.tap(console.log),
-        ]), data.decisionQuery);
+        const values = data.decisionQuery.map(chartDataPoint(x, y));
 
-        if (data.decisionQuery[0]['seriesKey']) console.log(data.decisionQuery[0]['seriesKey']);
-        // console.log(data.decisionQuery);
-        // console.log(x, y);
-        // console.log(values);
-        // console.log('');
-
-        this.chartData = [{
+        this.preppedData = {
           key: data.decisionQuery[0]['seriesKey'] || this.title,
           values,
-        }];
+        };
 
-        // console.log(this.chartData);
+        this.rawData = presentData(data.decisionQuery);
+        this.chartData = this.shaper.shape(this.preppedData);
       });
+  }
+
+  public setPlotType(plotType: string) {
+    const { x, y } = this.axisInfo;
+    if (!this.shapers) { return; }
+    this.plotType = plotType;
+    this.shaper = R.prop(this.plotType)(this.shapers);
+    this.options = this.shaper.options({ x, y });
+    this.chartData = this.shaper.shape(this.preppedData);
   }
 }
