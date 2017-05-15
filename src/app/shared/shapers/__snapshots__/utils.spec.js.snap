@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`#getBarChartValues should produce correct shape when seriesKey is: absent 1`] = `
+Object {
+  "key": "series1",
+  "values": Array [
+    Object {
+      "xKey": 1,
+      "yKey": "axisName",
+    },
+    Object {
+      "xKey": 1,
+      "yKey": "axisName",
+    },
+  ],
+}
+`;
+
+exports[`#getBarChartValues should produce correct shape when seriesKey is: present 1`] = `
+Array [
+  Object {
+    "key": "series1",
+    "values": Array [
+      Object {
+        "xKey": 1,
+        "yKey": "axisName",
+      },
+    ],
+  },
+  Object {
+    "key": "series2",
+    "values": Array [
+      Object {
+        "xKey": 1,
+        "yKey": "axisName",
+      },
+    ],
+  },
+]
+`;

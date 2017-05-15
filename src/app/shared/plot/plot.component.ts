@@ -54,19 +54,19 @@ interface Axis {
   `,
 })
 export class PlotComponent implements OnInit {
-  options: object;
-  loading: boolean;
+  private options: object;
+  private loading: boolean;
   private rawData: string;
   private preppedData: object;
   private shapers: any;
   private shaper: any;
   private chartData: object = [];
   private showRaw: boolean = false;
+  private plotType: string;
 
-  @Input() title: String;
-  @Input() query: String;
+  @Input() title: string;
+  @Input() query: string;
   @Input() axisInfo: Axis;
-  @Input() plotType: string;
 
   constructor(private apollo: Apollo) { }
 
@@ -80,15 +80,16 @@ export class PlotComponent implements OnInit {
 
   ngOnInit() {
     const { x, y } = this.axisInfo;
-    const plotType = this.plotType || 'discreteBarChart';
+    this.plotType = this.plotType || 'discreteBarChart';
     this.shapers = { pieChart, discreteBarChart };
-    this.shaper = R.prop(plotType)(this.shapers);
+    this.shaper = R.prop(this.plotType)(this.shapers);
     this.options = this.shaper.options({ x, y });
 
     this.apollo.query<QueryResponse>({ query: this.gqlQuery })
       .subscribe(({ data }) => {
         this.loading = data.loading;
 
+        console.log(data.decisionQuery);
         const values = data.decisionQuery.map(chartDataPoint(x, y));
 
         this.preppedData = {
