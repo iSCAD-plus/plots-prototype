@@ -93,9 +93,6 @@ export class PlotComponent implements OnInit {
 
         const shaper = getShaper(this.plotType);
         this.options = shaper.options(this.axisInfo);
-        if (this.plotType === 'multiBarChart') {
-          console.log(seriesKey);
-        }
         this.chartData = shaper.shape(data.decisionQuery, seriesKey);
       });
   }
