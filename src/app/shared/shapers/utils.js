@@ -14,6 +14,7 @@ const groupByProp = R.useWith(R.groupBy, [R.prop, R.identity]);
 exports.shapeMultiSeries = R.compose(
   R.map(R.zipObj(['key', 'values'])),
   R.toPairs,
+  // flipping args here to keep `shape` contract in place for `shapers`
   R.flip(groupByProp),
 );
 

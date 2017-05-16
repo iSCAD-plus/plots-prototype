@@ -81,12 +81,11 @@ export class PlotComponent implements OnInit {
   }
 
   ngOnInit() {
-    const { x, y } = this.axisInfo;
+    const { seriesKey } = this.axisInfo;
 
     this.apollo
       .query<QueryResponse>({ query: this.gqlQuery })
       .subscribe(({ data }) => {
-        const { seriesKey } = this.axisInfo;
         this.loading = data.loading;
         this.plotType = seriesKey ? 'multiBarChart' : 'discreteBarChart';
         this.rawData = data.decisionQuery;
