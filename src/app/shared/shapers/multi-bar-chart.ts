@@ -1,27 +1,33 @@
 import * as R from 'ramda';
-import { shapeSingleSeries } from './utils.js';
+import { shapeMultiSeries } from './utils.js'
 
-export const shape = shapeSingleSeries;
+export const shape = shapeMultiSeries;
 
 export const options = ({ x, y }) => ({
   chart: {
-    type: 'discreteBarChart',
+    type: 'multiBarChart',
     height: 450,
-    margin: { top: 20, right: 20, bottom: 150, left: 55 },
+    margin : {
+      top: 20,
+      right: 20,
+      bottom: 45,
+      left: 45
+    },
     x: R.prop(x),
     y: R.prop(y),
-    showValues: true,
-    valueFormat: Math.floor,
+    clipEdge: true,
     duration: 500,
+    stacked: true,
     xAxis: {
       axisLabel: x,
+      showMaxMin: false,
       rotateLabels: 22.5,
       staggerLabels: true,
     },
     yAxis: {
       axisLabel: y,
-      axisLabelDistance: -10,
+      axisLabelDistance: -20,
       tickFormat: Math.floor,
-    },
+    }
   }
-})
+});

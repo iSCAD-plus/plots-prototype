@@ -1,14 +1,15 @@
 import * as R from 'ramda';
+import { shapeSingleSeries } from './utils.js';
 
-export const shape = ({ key, values }) => (values);
+export const shape = R.identity;
 
-export const options = () => {
-  const chart = {
+export const options = ({ x, y }) => ({
+  chart: {
     type: 'pieChart',
     height: 450,
     margin: { top: 20, right: 20, bottom: 150, left: 55 },
-    x: R.prop('value'),
-    y: R.prop('label'),
+    x: R.prop(x),
+    y: R.prop(y),
     showLabels: false,
     duration: 500,
     labelThreshold: 0.01,
@@ -21,9 +22,5 @@ export const options = () => {
         left: 0,
       },
     },
-  };
-
-  return {
-    chart: chart
-  };
-};
+  }
+});

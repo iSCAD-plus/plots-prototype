@@ -1,33 +1,24 @@
-import R from 'ramda';
-import S from 'sanctuary';
+// This file is written in non-babel syntax so TS compiler can
+// consume it without needing babel to be included in the
+// build pipeline
 
-// debug use only
+const R = require('ramda');
+const S = require('sanctuary');
+
+// debug use only, nice when you need to see what is happening
+// at a certain point in a composed list of functions
 const log = R.tap(console.log);
 
-const shapeMultiSeries = R.compose(
-  R.map(
-    R.compose(
-      R.zipObj(['key', 'values']),
-      R.over(R.lensIndex(1), R.map(R.omit('seriesKey'))),
-    ),
-  ),
+const groupByProp = R.useWith(R.groupBy, [R.prop, R.identity]);
+
+exports.shapeMultiSeries = R.compose(
+  R.map(R.zipObj(['key', 'values'])),
   R.toPairs,
-  R.groupBy(R.prop('seriesKey')),
+  R.flip(groupByProp),
 );
 
-const shapeSingleSeries = R.compose(
-  R.merge({key: 'series1'}),
+exports.shapeSingleSeries = R.compose(
+  R.of,
+  R.merge({ key: 'series1' }),
   R.objOf('values'),
-);
-
-const isMultiSeries = R.compose(
-  S.isJust,
-  S.chain(S.get(S.is(String), 'seriesKey')),
-  S.head,
-);
-
-export const getBarChartValues = R.ifElse(
-  isMultiSeries,
-  shapeMultiSeries,
-  shapeSingleSeries,
 );

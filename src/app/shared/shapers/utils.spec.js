@@ -1,25 +1,19 @@
-import { getBarChartValues } from './utils';
+import { shapeSingleSeries, shapeMultiSeries } from './utils';
 
-const dataPoint = { xKey: 1, yKey: 'axisName' };
+const dataPoint = xKey => ({ xKey, yKey: 'axisName' })
+const a = dataPoint(1);
+const b = dataPoint(2);
+const singleSeries = [a, b];
+const multiSeries = singleSeries.map((x, i) => ({ ...x, seriesKey: `series${i}` }));
 
-const multiSeries = [
-  { ...dataPoint, seriesKey: 'series1' },
-  { ...dataPoint, seriesKey: 'series2' },
-];
+describe('#shapeSingleSeries', () => {
+  it('should produce correct shape', () => {
+    expect(shapeSingleSeries(singleSeries)).toMatchSnapshot();
+  });
+});
 
-const singleSeries = [
-  dataPoint,
-  dataPoint,
-];
-
-describe('#getBarChartValues', () => {
-  describe('should produce correct shape when seriesKey is:', () => {
-    it('present', () => {
-      expect(getBarChartValues(multiSeries)).toMatchSnapshot();
-    });
-
-    it('absent', () => {
-      expect(getBarChartValues(singleSeries)).toMatchSnapshot();
-    });
+describe('#shapeMultiSeries', () => {
+  it('should produce correct shape', () => {
+    expect(shapeMultiSeries(multiSeries, 'seriesKey')).toMatchSnapshot();
   });
 });
