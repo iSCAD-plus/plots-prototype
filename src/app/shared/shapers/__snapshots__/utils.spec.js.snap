@@ -6,6 +6,7 @@ Array [
     "key": "series0",
     "values": Array [
       Object {
+        "series": 0,
         "seriesKey": "series0",
         "xKey": 1,
         "yKey": "axisName",
@@ -16,6 +17,7 @@ Array [
     "key": "series1",
     "values": Array [
       Object {
+        "series": 0,
         "seriesKey": "series1",
         "xKey": 2,
         "yKey": "axisName",
@@ -28,13 +30,15 @@ Array [
 exports[`#shapeSingleSeries should produce correct shape 1`] = `
 Array [
   Object {
-    "key": "series1",
+    "key": "series0",
     "values": Array [
       Object {
+        "series": 0,
         "xKey": 1,
         "yKey": "axisName",
       },
       Object {
+        "series": 0,
         "xKey": 2,
         "yKey": "axisName",
       },

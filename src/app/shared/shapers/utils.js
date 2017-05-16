@@ -9,17 +9,25 @@ const S = require('sanctuary');
 // at a certain point in a composed list of functions
 const log = R.tap(console.log);
 
-const groupByProp = R.useWith(R.groupBy, [R.prop, R.identity]);
+// This is to get around a bug where datapoint objects
+// are sealed somewhere and nvd3 expects them later
+// to be extensible, in order to dodge we add a
+// dummy value to the property up front
+const addSeriesKeyForNvd3 = R.map(R.merge({ series: 0 }));
+const groupByProp = (xs, prop) => R.groupBy(R.prop(prop), xs);
 
 exports.shapeMultiSeries = R.compose(
-  R.map(R.zipObj(['key', 'values'])),
+  R.map(R.compose(
+    R.zipObj(['key', 'values']),
+    R.over(R.lensIndex(1), addSeriesKeyForNvd3),
+  )),
   R.toPairs,
-  // flipping args here to keep `shape` contract in place for `shapers`
-  R.flip(groupByProp),
+  groupByProp,
 );
 
 exports.shapeSingleSeries = R.compose(
   R.of,
-  R.merge({ key: 'series1' }),
+  R.merge({ key: 'series0' }),
   R.objOf('values'),
+  addSeriesKeyForNvd3,
 );
