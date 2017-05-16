@@ -69,11 +69,15 @@ export class PlotComponent implements OnInit {
     return gql`${this.query}`;
   }
 
+  formatData() {
+    const shaper = getShaper(this.plotType);
+    this.options = shaper.options(this.axisInfo);
+    this.chartData = shaper.shape(this.rawData, this.axisInfo);
+  }
+
   public setPlotType(plotType: string) {
     this.plotType = plotType;
-    const shaper = getShaper(plotType);
-    this.options = shaper.options(this.axisInfo);
-    this.chartData = shaper.shape(this.rawData);
+    this.formatData();
   }
 
   toggleDisplayJsonVisibility() {
@@ -90,10 +94,7 @@ export class PlotComponent implements OnInit {
         this.plotType = seriesKey ? 'multiBarChart' : 'discreteBarChart';
         this.rawData = data.decisionQuery;
         this.displayJson = presentData(data.decisionQuery);
-
-        const shaper = getShaper(this.plotType);
-        this.options = shaper.options(this.axisInfo);
-        this.chartData = shaper.shape(data.decisionQuery, seriesKey, this.axisInfo);
+        this.formatData();
       });
   }
 }

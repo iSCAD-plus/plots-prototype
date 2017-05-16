@@ -17,7 +17,7 @@ export const options = ({ x, y }) => ({
     y: R.prop(y),
     clipEdge: true,
     duration: 500,
-    stacked: true,
+    grouped: true,
     reduceXTicks: false,
     xAxis: {
       axisLabel: x,
