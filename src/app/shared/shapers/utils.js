@@ -28,7 +28,16 @@ exports.shapeMultiSeries = (values, seriesKey, axisInfo) => {
   const groups = groupByProp(values, axisInfo.seriesKey);
 
   const fillInMissing = (groupValues, groupKey) => {
-    const missingKeys = R.difference(xs, getXs(groupValues));
+    const isNumeric = R.all(Number.isInteger)(xs);
+
+    var missingKeys = [];
+    if (isNumeric) {
+      const min = R.reduce(R.min, Infinity, xs);
+      const max = R.reduce(R.max, -Infinity, xs);
+      missingKeys = R.difference(R.range(min, max+1), getXs(groupValues));
+    } else {
+      missingKeys = R.difference(xs, getXs(groupValues));
+    }
 
     const createEmpty = (x) => R.merge({
       [axisInfo.seriesKey]: groupKey,
