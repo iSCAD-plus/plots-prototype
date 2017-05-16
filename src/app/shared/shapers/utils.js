@@ -16,7 +16,41 @@ const log = R.tap(console.log);
 const addSeriesKeyForNvd3 = R.map(R.merge({ series: 0 }));
 const groupByProp = (xs, prop) => R.groupBy(R.prop(prop), xs);
 
-exports.shapeMultiSeries = R.compose(
+exports.shapeMultiSeries = (values, seriesKey, axisInfo) => {
+  const getXs = R.compose(
+    R.sort((a,b) => (a-b)),
+    R.uniq,
+    R.map(R.path([axisInfo.x]))
+  );
+
+  const xs = getXs(values);
+
+  const groups = groupByProp(values, axisInfo.seriesKey);
+
+  const fillInMissing = (groupValues, groupKey) => {
+    const missingKeys = R.difference(xs, getXs(groupValues));
+
+    const createEmpty = (x) => R.merge({
+      [axisInfo.seriesKey]: groupKey,
+      [axisInfo.x]: x,
+      [axisInfo.y]: 0,
+      series: 0,
+    })(x);
+
+    return R.sortBy(R.prop(axisInfo.x), R.concat(groupValues, R.map(createEmpty)(missingKeys)));
+  }
+
+  return R.compose(
+    R.map(R.compose(
+      R.zipObj(['key', 'values']),
+      R.over(R.lensIndex(1), addSeriesKeyForNvd3),
+    )),
+    R.toPairs
+  )(R.mapObjIndexed(fillInMissing, groups));
+}
+
+exports.shapeMultiSeries2 = R.compose(
+  log,
   R.map(R.compose(
     R.zipObj(['key', 'values']),
     R.over(R.lensIndex(1), addSeriesKeyForNvd3),

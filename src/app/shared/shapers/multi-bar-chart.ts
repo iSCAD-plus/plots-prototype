@@ -18,6 +18,7 @@ export const options = ({ x, y }) => ({
     clipEdge: true,
     duration: 500,
     stacked: true,
+    reduceXTicks: false,
     xAxis: {
       axisLabel: x,
       showMaxMin: false,
