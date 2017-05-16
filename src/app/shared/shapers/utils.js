@@ -16,9 +16,9 @@ const log = R.tap(console.log);
 const addSeriesKeyForNvd3 = R.map(R.merge({ series: 0 }));
 const groupByProp = R.flip(R.useWith(R.groupBy, [R.prop, R.identity]));
 
-exports.shapeMultiSeries = (values, seriesKey, axisInfo) => {
+exports.shapeMultiSeries = (values, axisInfo) => {
   const getXs = R.compose(
-    R.sort((a,b) => (a-b)),
+    R.sort(R.subtract),
     R.uniq,
     R.map(R.path([axisInfo.x]))
   );
@@ -34,17 +34,17 @@ exports.shapeMultiSeries = (values, seriesKey, axisInfo) => {
     if (isNumeric) {
       const min = R.reduce(R.min, Infinity, xs);
       const max = R.reduce(R.max, -Infinity, xs);
-      missingKeys = R.difference(R.range(min, max+1), getXs(groupValues));
+      missingKeys = R.difference(R.range(min, max + 1), getXs(groupValues));
     } else {
       missingKeys = R.difference(xs, getXs(groupValues));
     }
 
-    const createEmpty = (x) => R.merge({
+    const createEmpty = x => R.merge({
       [axisInfo.seriesKey]: groupKey,
       [axisInfo.x]: x,
       [axisInfo.y]: 0,
       series: 0,
-    })(x);
+    }, x);
 
     return R.sortBy(R.prop(axisInfo.x), R.concat(groupValues, R.map(createEmpty)(missingKeys)));
   }
@@ -59,7 +59,6 @@ exports.shapeMultiSeries = (values, seriesKey, axisInfo) => {
 }
 
 exports.shapeMultiSeries2 = R.compose(
-  log,
   R.map(R.compose(
     R.zipObj(['key', 'values']),
     R.over(R.lensIndex(1), addSeriesKeyForNvd3),
