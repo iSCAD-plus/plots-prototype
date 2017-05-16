@@ -14,7 +14,7 @@ const log = R.tap(console.log);
 // to be extensible, in order to dodge we add a
 // dummy value to the property up front
 const addSeriesKeyForNvd3 = R.map(R.merge({ series: 0 }));
-const groupByProp = (xs, prop) => R.groupBy(R.prop(prop), xs);
+const groupByProp = R.flip(R.useWith(R.groupBy, [R.prop, R.identity]));
 
 exports.shapeMultiSeries = R.compose(
   R.map(R.compose(
