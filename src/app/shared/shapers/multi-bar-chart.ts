@@ -7,7 +7,7 @@ export const options = ({ x, y }) => ({
   chart: {
     type: 'multiBarChart',
     height: 450,
-    margin : {
+    margin: {
       top: 20,
       right: 20,
       bottom: 45,

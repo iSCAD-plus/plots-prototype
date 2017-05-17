@@ -5,11 +5,6 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import getShaper from '../shapers';
 
-const presentData = S.pipe([
-  R.map(R.omit(['__typename'])),
-  x => JSON.stringify(x, null, 2),
-]);
-
 interface QueryResponse {
   decisionQuery: object[]
   loading: boolean
@@ -37,26 +32,48 @@ interface Axis {
       type="radio"
       name="chartType"
       [(ngModel)]="plotType"
-      (click)="setPlotType('discreteBarChart')"
-      value="discreteBarChart"
-    > Bar Chart
+      (click)="setPlotType(barType)"
+      [value]="barType"
+    > Bar Chart |
+    <input
+      type="radio"
+      name="chartType"
+      [(ngModel)]="plotType"
+      (click)="setPlotType('table')"
+      value="table"
+    >Table
     </form>
-    <nvd3
-      (click)="toggleDisplayJsonVisibility()"
-      *ngIf="chartData"
-      [options]="options"
-      [data]="chartData">
-    </nvd3>
-    <pre [hidden]="!showJson">{{displayJson}}<pre>
+    <div *ngIf="isChart(plotType)">
+      <nvd3
+        *ngIf="chartData"
+        [options]="options"
+        [data]="chartData">
+      </nvd3>
+    </div>
+    <div *ngIf="plotType === 'table'">
+      <table datatable class="row-border hover">
+        <thead>
+          <tr>
+            <th *ngFor="let key of chartData.header">{{key}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of chartData.values">
+            <td *ngFor="let datum of data">
+              {{datum}}
+            </td>
+          </tr>
+      </table>
+    </div>
   `,
 })
 export class PlotComponent implements OnInit {
-  private showJson: boolean;
   private loading: boolean;
   private options: object;
   private rawData: object[];
   private chartData: object[];
-  private displayJson: string;
+  private tableData: object;
+  private barType: string;
 
   @Input() title: string;
   @Input() query: string;
@@ -67,6 +84,10 @@ export class PlotComponent implements OnInit {
 
   get gqlQuery() {
     return gql`${this.query}`;
+  }
+
+  isChart(plotType) {
+    return plotType && plotType.toLowerCase().includes('chart');
   }
 
   formatData() {
@@ -80,10 +101,6 @@ export class PlotComponent implements OnInit {
     this.formatData();
   }
 
-  toggleDisplayJsonVisibility() {
-    this.showJson = !this.showJson;
-  }
-
   ngOnInit() {
     const { seriesKey } = this.axisInfo;
 
@@ -91,9 +108,9 @@ export class PlotComponent implements OnInit {
       .query<QueryResponse>({ query: this.gqlQuery })
       .subscribe(({ data }) => {
         this.loading = data.loading;
-        this.plotType = seriesKey ? 'multiBarChart' : 'discreteBarChart';
+        this.barType = seriesKey ? 'multiBarChart' : 'discreteBarChart';
+        this.plotType = this.barType;
         this.rawData = data.decisionQuery;
-        this.displayJson = presentData(data.decisionQuery);
         this.formatData();
       });
   }
