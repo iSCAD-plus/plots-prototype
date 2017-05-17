@@ -63,3 +63,21 @@ exports.shapeSingleSeries = R.compose(
   R.objOf('values'),
   addSeriesKeyForNvd3,
 );
+
+exports.shapeTable = (values, {seriesKey, x, y}) => {
+  const header = seriesKey ? [seriesKey, x, y] : [x, y];
+
+  const tableValues = values.map(
+    value => (
+      header.map(
+        key => value[key]
+      )
+    )
+  );
+
+  return {
+    header,
+    values: tableValues,
+  };
+};
+
