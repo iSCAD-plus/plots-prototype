@@ -57,17 +57,6 @@ exports.shapeMultiSeries = (values, {seriesKey, x, y}) => {
   )(R.mapObjIndexed(fillInMissing, groups));
 };
 
-exports.shapeMultiSeries2 = R.compose(
-  R.map(
-    R.compose(
-      R.zipObj(['key', 'values']),
-      R.over(R.lensIndex(1), addSeriesKeyForNvd3),
-    ),
-  ),
-  R.toPairs,
-  groupByProp,
-);
-
 exports.shapeSingleSeries = R.compose(
   R.of,
   R.merge({key: 'series0'}),
