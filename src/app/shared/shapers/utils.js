@@ -32,12 +32,12 @@ exports.shapeMultiSeries = (values, {seriesKey, x, y}) => {
       () => R.difference(xs, getXs(groupValues)),
     )(xs);
 
-    const createEmpty = xVal => R.merge({
+    const createEmpty = xVal => ({
       [seriesKey]: groupKey,
       [x]: xVal,
       [y]: 0,
       series: 0,
-    }, xVal);
+    });
 
     return R.sortBy(
       R.prop(x),
