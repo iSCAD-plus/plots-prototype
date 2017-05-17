@@ -4,7 +4,6 @@ import gql from 'graphql-tag';
 import { Component, OnInit, Input } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import getShaper from '../shapers';
-import { shapeTable } from '../shapers/utils';
 
 interface QueryResponse {
   decisionQuery: object[]
@@ -81,8 +80,7 @@ export class PlotComponent implements OnInit {
   @Input() axisInfo: Axis;
   @Input() plotType: string;
 
-  constructor(private apollo: Apollo) {
-  }
+  constructor(private apollo: Apollo) { }
 
   get gqlQuery() {
     return gql`${this.query}`;
