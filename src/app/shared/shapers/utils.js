@@ -22,7 +22,6 @@ exports.shapeMultiSeries = (values, {seriesKey, x, y}) => {
   const groups = groupByProp(values, seriesKey);
 
   const fillInMissing = (groupValues, groupKey) => {
-    const isNumeric = xs;
     const missingKeys = R.ifElse(
       R.all(Number.isInteger),
       () => {
@@ -33,9 +32,9 @@ exports.shapeMultiSeries = (values, {seriesKey, x, y}) => {
       () => R.difference(xs, getXs(groupValues)),
     )(xs);
 
-    const createEmpty = R.merge({
+    const createEmpty = xVal => ({
       [seriesKey]: groupKey,
-      [x]: x,
+      [x]: xVal,
       [y]: 0,
       series: 0,
     });
