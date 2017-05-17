@@ -5,6 +5,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import { DataTablesModule } from 'angular-datatables';
 
 import 'd3';
 import 'nvd3';
@@ -36,6 +37,7 @@ export function provideClient(): ApolloClient {
   ],
   imports: [
     NvD3Module,
+    DataTablesModule,
     BrowserModule,
     ApolloModule.forRoot(provideClient),
     FormsModule,
